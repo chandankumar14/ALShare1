@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+        integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+        integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+    <title>Account deletion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .successMessage {
+            background-color: #4CAF50;
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .form1 {
+            display: none;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="myForm">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        <button type="button" class="btn btn-primary" onclick="getFormData()">Submit</button>
+    </form>
+    <form id="myForm1" class="form1">
+        <label for="email"> Enter OTP</label>
+        <input type="otp" id="otp" name="OTP" required>
+        <button type="button" class="btn btn-success" onclick="verifyOTP()">Submit</button>
+    </form>
+    <div class="successMessage" id="successMessage">Your account is deleted successfully!</div>
+
+    <!-- *********java script for api call ********-->
+    <script>
+        function getFormData() {
+            const form = document.getElementById('myForm');
+            const form1 = document.getElementById('myForm1')
+            var email;
+            const formData = new FormData(form);
+            for (const entry of formData.entries()) {
+                email = entry[1]
+            }
+            const apiUrl = `https://mobile.acelucid.com/api/v1/delete_account?Email_Phone=${email}`;
+            // Make a GET request using fetch
+            fetch(apiUrl)
+                .then(data => {
+                    form.style.display = "none"
+                    form1.style.display = "block"
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+        }
+        /*******verifying otp and deleteing account*****/
+        function verifyOTP() {
+            var OTP_code;
+            const form1 = document.getElementById('myForm1')
+            const successMessage = document.getElementById('successMessage')
+            const form1Data = new FormData(form1);
+            for (const entry of form1Data.entries()) {
+                OTP_code = entry[1]
+            }
+            const apiUrl = `https://mobile.acelucid.com/api/v1/account_deletion_verify?OTP_code=${OTP_code}`;
+            fetch(apiUrl)
+                .then(data => {
+                    form1.style.display = "none"
+                    successMessage.style.display = "block"
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+
+        }
+    </script>
+</body>
+
+</html>
